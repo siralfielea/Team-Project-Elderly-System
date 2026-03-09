@@ -132,7 +132,7 @@ class _MapPageState extends State<MapPage> {
           mapController: _mapController,
           options: MapOptions(
             initialCenter: _currentPosition ?? LatLng(53.8008, -1.5491), // Leeds
-            initialZoom: 18,
+            initialZoom: 16,
           ),
           children: [
             TileLayer(
@@ -157,11 +157,11 @@ class _MapPageState extends State<MapPage> {
             right: 16,
                 child: Column( 
                  children: [
-                   IconButton( 
+                   IconButton.filled( 
                        icon: Icon(Icons.near_me),
                        onPressed: _currentPosition == null
                           ? null 
-                          : () => _mapController.move(_currentPosition!, 16),
+                          : () => _mapController.moveAndRotate(_currentPosition!, 16, 0),
                        ), 
                  ],
                  ),
