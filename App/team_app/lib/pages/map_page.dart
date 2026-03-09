@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
+import 'package:flutter_map_tile_caching/flutter_map_tile_caching.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
@@ -18,6 +19,7 @@ class MapPage extends StatefulWidget {
 class _MapPageState extends State<MapPage> {
   final MapController _mapController = MapController();
   LatLng? _currentPosition;
+  final _tileProvider = FMTCTileProvider(stores: const {'mapCache': BrowseStoreStrategy.readUpdateCreate},);
 
   StreamSubscription<Position>? _positionStream;
 
@@ -73,6 +75,14 @@ class _MapPageState extends State<MapPage> {
       return await Geolocator.getCurrentPosition();
     }
 
+    String _currentTheme(AppThemeMode theme) {
+        switch(theme) {
+            case AppThemeMode.dark: return 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
+            case AppThemeMode.highContrast: return 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}.png';
+            default: return 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png';
+            }
+    }
+
     IconData _getIconFromName(String name) {
     switch (name) {
         case 'man': return Icons.boy_sharp;
@@ -98,7 +108,7 @@ class _MapPageState extends State<MapPage> {
   _positionStream = Geolocator.getPositionStream().listen((position) {
     if (!mounted) return;
     setState(() {
-          _currentPosition = new LatLng(position.latitude, position.longitude);
+          _currentPosition = LatLng(position.latitude, position.longitude);
         });
         });
     }
@@ -116,9 +126,7 @@ class _MapPageState extends State<MapPage> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Map')),
-      body: Padding(
-        padding: const EdgeInsets.all(24),
-        child: FlutterMap(
+      body: FlutterMap(
           mapController: _mapController,
           options: MapOptions(
             initialCenter: _currentPosition ?? LatLng(53.8008, -1.5491), // Leeds
@@ -126,8 +134,10 @@ class _MapPageState extends State<MapPage> {
           ),
           children: [
             TileLayer(
-              urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+              urlTemplate: _currentTheme(settings.themeMode),
               userAgentPackageName: 'com.example.team_app',
+              subdomains: ['a', 'b', 'c'],
+              tileProvider: _tileProvider,
             ),
             MarkerLayer(
                 markers: [
@@ -140,7 +150,6 @@ class _MapPageState extends State<MapPage> {
             )
           ],
         ),
-      ),
     );
   }
 }
