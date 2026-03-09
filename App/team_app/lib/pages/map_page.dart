@@ -126,7 +126,9 @@ class _MapPageState extends State<MapPage> {
 
     return Scaffold(
       appBar: AppBar(title: const Text('Map')),
-      body: FlutterMap(
+      body: Stack( 
+        children: [ 
+          FlutterMap(
           mapController: _mapController,
           options: MapOptions(
             initialCenter: _currentPosition ?? LatLng(53.8008, -1.5491), // Leeds
@@ -149,6 +151,22 @@ class _MapPageState extends State<MapPage> {
                 ],
             )
           ],
+        ),
+        Positioned(
+            bottom: 16,
+            right: 16,
+                child: Column( 
+                 children: [
+                   IconButton( 
+                       icon: Icon(Icons.near_me),
+                       onPressed: _currentPosition == null
+                          ? null 
+                          : () => _mapController.move(_currentPosition!, 16),
+                       ), 
+                 ],
+                 ),
+            ),
+        ],
         ),
     );
   }
