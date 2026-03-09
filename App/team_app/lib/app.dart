@@ -9,16 +9,30 @@ import 'pages/home_page.dart';
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
+ThemeData getTheme(AppThemeMode mode) {
+  switch (mode) {
+    case AppThemeMode.light:
+      return ThemeData.light( 
+      );
+
+    case AppThemeMode.dark:
+      return ThemeData.dark();
+
+    case AppThemeMode.highContrast:
+      return ThemeData(
+        colorScheme: const ColorScheme.highContrastLight(),
+        useMaterial3: true,
+      );
+  }
+}
   @override
   Widget build(BuildContext context) {
     final settings = context.watch<UserSettings>();
 
     return MaterialApp(
       title: 'Elderly System',
-      theme: ThemeData(
-        brightness: settings.darkMode ? Brightness.dark : Brightness.light,
-        primarySwatch: Colors.deepPurple,
-      ),
+      theme: getTheme(settings.themeMode),
+      debugShowCheckedModeBanner: false,
       home: const RootRouter(),
     );
   }
