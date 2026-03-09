@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:team_app/pages/settings_page.dart';
 import '../services/auth_service.dart';
 import 'map_page.dart';
 import 'air_quality_page.dart';
@@ -14,12 +15,18 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Elderly System Home'),
-        actions: [
+        leading: 
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () => auth.logout(),
             tooltip: 'Logout',
-          )
+          ),
+        actions: [
+            IconButton(
+                icon: const Icon(Icons.settings),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (_) => const SettingsPage())), 
+                tooltip: 'Settings',
+            ),
         ],
       ),
       body: Padding(
