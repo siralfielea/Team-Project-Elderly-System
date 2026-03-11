@@ -3,14 +3,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 
 enum AppThemeMode { light, dark, highContrast }
+enum MapIcon { circle, man, woman, wheelchair }
 
 class UserSettings extends ChangeNotifier {
 
     AppThemeMode _themeMode = AppThemeMode.light;
-    String _mapIcon = 'default';
+    MapIcon _mapIcon = MapIcon.circle;
 
     AppThemeMode get themeMode => _themeMode;
-    String get mapIcon => _mapIcon;
+    MapIcon get mapIcon => _mapIcon;
 
     void setThemeMode(AppThemeMode mode) {
         _themeMode = mode;
@@ -18,7 +19,7 @@ class UserSettings extends ChangeNotifier {
         _savePrefs();
     }
 
-    void setMapIcon(String iconName) {
+    void setMapIcon(MapIcon iconName) {
     _mapIcon = iconName;
     notifyListeners();
     _savePrefs();
@@ -34,13 +35,19 @@ class UserSettings extends ChangeNotifier {
         orElse: () => AppThemeMode.light,
     );
     }
-    _mapIcon = prefs.getString('mapIcon') ?? 'default';
+    final savedMapIcon = prefs.getString('mapIcon');
+    if (savedMapIcon != null) {
+        _mapIcon = MapIcon.values.firstWhere( 
+            (e) => e.name == savedMapIcon,
+            orElse: () => MapIcon.circle,
+            );
+            }
     notifyListeners();
     }
 
     Future<void> _savePrefs() async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString('themeMode', _themeMode.name);
-    prefs.setString('mapIcon', _mapIcon);
+    prefs.setString('mapIcon', _mapIcon.name);
     }
 } 

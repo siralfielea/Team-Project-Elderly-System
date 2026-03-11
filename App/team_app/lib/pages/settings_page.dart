@@ -3,8 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:team_app/models/user_settings.dart';
 
-enum ThemeModeSetting { light, dark, highContrast }
-
 class SettingsPage extends StatelessWidget{
     const SettingsPage({super.key});
 
@@ -39,11 +37,25 @@ class SettingsPage extends StatelessWidget{
                                     icon: Icon(Icons.contrast),
                                     ),
                                 ], 
-
                             selected: {settings.themeMode},
                             onSelectionChanged: (Set<AppThemeMode> selection) {
                                 context.read<UserSettings>().setThemeMode(selection.first);
                                 },
+                            ),
+                            Text('Map Icon'),
+                            RadioGroup<MapIcon>(
+                              groupValue: settings.mapIcon,
+                              onChanged: (value) {
+                                context.read<UserSettings>().setMapIcon(value!);
+                              },
+                              child: Column(
+                                children: const [
+                                  RadioListTile(value: MapIcon.circle, title: Icon(Icons.circle)),
+                                  RadioListTile(value: MapIcon.woman, title: Icon(Icons.girl)),
+                                  RadioListTile(value: MapIcon.man, title: Icon(Icons.boy)),
+                                  RadioListTile(value: MapIcon.wheelchair, title: Icon(Icons.accessible)),
+                                ],
+                              ),
                             )
                         ],
                     ),

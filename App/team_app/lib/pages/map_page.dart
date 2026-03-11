@@ -83,12 +83,13 @@ class _MapPageState extends State<MapPage> {
             }
     }
 
-    IconData _getIconFromName(String name) {
-    switch (name) {
-        case 'man': return Icons.boy_sharp;
-        case 'woman': return Icons.girl_sharp;
-        case 'wheelchair': return Icons.accessible;
-        default: return Icons.location_on;
+    IconData _getIconFromName(MapIcon mapIcon) {
+    switch (mapIcon) {
+        case MapIcon.man: return Icons.boy_sharp;
+        case MapIcon.woman: return Icons.girl_sharp;
+        case MapIcon.wheelchair: return Icons.accessible;
+        case MapIcon.circle: return Icons.circle;
+        default: return Icons.circle;
         }
     }
 
